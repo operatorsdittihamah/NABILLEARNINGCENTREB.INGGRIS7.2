@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Quiz Game English HOTS</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#814c02,#855401);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:#333;
+}
+.container{
+    background:white;
+    width:90%;
+    max-width:900px;
+    border-radius:15px;
+    padding:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* ===== TAMBAHAN GAMBAR ===== */
+.quiz-image{
+    text-align:center;
+    margin-bottom:15px;
+}
+.quiz-image img{
+    max-width:220px;
+    border-radius:15px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.3);
+}
+/* ========================== */
+
+h1{
+    text-align:center;
+    color:#2c3e50;
+}
+.chapter{
+    text-align:center;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+.question{
+    font-size:22px;
+    margin:20px 0;
+}
+.options button{
+    display:block;
+    width:100%;
+    padding:15px;
+    margin:10px 0;
+    font-size:18px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    background:#ecf0f1;
+    transition:0.3s;
+}
+.options button:hover{
+    background:#dfe6e9;
+}
+.options button.correct{
+    background:#2ecc71;
+    color:white;
+}
+.options button.wrong{
+    background:#e74c3c;
+    color:white;
+}
+.navigation{
+    display:flex;
+    justify-content:space-between;
+    margin-top:20px;
+}
+.navigation button{
+    padding:12px 20px;
+    font-size:16px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#3498db;
+    color:white;
+}
+.navigation button:hover{
+    background:#2980b9;
+}
+.score{
+    text-align:center;
+    font-size:24px;
+    margin-top:20px;
+}
+
+/* ===== TAMBAHAN KUNCI JAWABAN ===== */
+.answer-key{
+    margin-top:25px;
+    background:#f4f6f8;
+    padding:20px;
+    border-radius:12px;
+}
+.answer-key h3{
+    text-align:center;
+    color:#2c3e50;
+}
+.answer-key ol{
+    padding-left:20px;
+}
+.answer-key li{
+    margin:6px 0;
+}
+/* =============================== */
+
+.restart{
+    text-align:center;
+    margin-top:20px;
+}
+.restart button{
+    padding:15px 30px;
+    font-size:18px;
+    background:#27ae60;
+    color:white;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+.restart button:hover{
+    background:#1e8449;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<!-- ===== GAMBAR DI ATAS TENGAH ===== -->
+<div class="quiz-image">
+    <img src="NBL.jpeg" alt="English Quiz">
+</div>
+<!-- ================================ -->
+
+<h1>🎮 English Quiz Game (HOTS)</h1>
+<div class="chapter" id="chapter"></div>
+<div class="question" id="question"></div>
+
+<div class="options" id="options"></div>
+
+<div class="navigation">
+<button onclick="prevQuestion()">⬅ Previous</button>
+<button onclick="nextQuestion()">Next ➡</button>
+</div>
+
+<div class="score" id="score"></div>
+
+<!-- ===== TEMPAT KUNCI JAWABAN ===== -->
+<div class="answer-key" id="answerKey" style="display:none;">
+<h3>📘 Kunci Jawaban</h3>
+<ol id="answerList"></ol>
+</div>
+<!-- ================================ -->
+
+<div class="restart" id="restart" style="display:none;">
+<button onclick="restartQuiz()">🔄 Mulai Lagi</button>
+</div>
+</div>
+
+<script>
+const quiz = [
+/* ===== CHAPTER 1 ===== */
+/* ===== CHAPTER 6: OLYMPIAD LEVEL (SMP) ===== */
+{chapter:"Chapter 6: Olympiad Level",q:"Choose the sentence with the MOST accurate meaning.",o:["He stopped to smoke.","He stopped smoking.","He was smoking and stopped.","He never smoked."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows a correct cause–effect relationship?",o:["He was tired because he slept early.","He slept early so he felt tired.","He felt tired because he slept late.","He slept late so he was energetic."],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"What can be inferred from: 'Although it was raining, she went to school.'?",o:["She hates rain.","She stayed at home.","She is irresponsible.","She is responsible."],a:3},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence has the SAME meaning as: 'The test was too difficult for the students to finish.'?",o:["Students finished easily.","Students could not finish it.","The test was simple.","Students enjoyed the test."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Choose the BEST conclusion: 'All diligent students succeed. Rina is diligent.'",o:["Rina may fail.","Rina succeeds.","Rina is lazy.","Rina stops studying."],a:1},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence is grammatically correct?",o:["Hardly he understands the lesson.","He hardly understands the lesson.","He understands hardly the lesson.","Hardly understands he the lesson."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Choose the BEST paraphrase: 'She was exhausted, so she went to bed early.'",o:["She slept late.","She went to bed because she was tired.","She was tired after sleeping.","She stayed awake all night."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which option shows a CONTRAST idea?",o:["because","and","although","so"],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence expresses POSSIBILITY?",o:["She must be at home.","She is at home.","She might be at home.","She was at home."],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"What does 'He is accustomed to waking up early' mean?",o:["He hates waking early.","He rarely wakes early.","He is used to waking early.","He wakes early once."],a:2},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence is the MOST formal?",o:["Kids need rules.","Children require discipline.","Kids gotta behave.","Children must chill."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which word is closest in meaning to 'essential'?",o:["Optional","Unimportant","Necessary","Rare"],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"Choose the sentence that shows a RESULT.",o:["He studied hard, so he passed.","He passed because study.","He studies although tired.","He studies when tired."],a:0},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence contains IMPLIED meaning?",o:["She said she was angry.","She slammed the door.","She shouted loudly.","She cried openly."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence best shows CRITICAL THINKING?",o:["I agree.","I think so.","I believe it is correct because the data supports it.","It is true."],a:2},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Choose the correct analogy: Book : Read = Food : ?",o:["Cook","Eat","Buy","Sell"],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence avoids BIAS?",o:["Everyone knows it is wrong.","Some people believe it is wrong.","It is definitely bad.","Only fools do that."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence is logically correct?",o:["All birds can fly; penguins are birds.","Some birds cannot fly.","Birds never fly.","Penguins are not birds."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence is the BEST inference?",o:["The road is wet.","It rained earlier.","The road is long.","The road is busy."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which connector shows CONDITION?",o:["because","although","if","so"],a:2},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows a HYPOTHESIS?",o:["I know it is true.","It might rain tomorrow.","It rained yesterday.","It is raining now."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which word best completes: 'He spoke ___ to avoid misunderstanding.'",o:["careless","carelessly","careful","carefully"],a:3},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence has a CAUSE?",o:["He failed because he was lazy.","He failed so he was lazy.","He failed but he tried.","He failed and passed."],a:0},
+{chapter:"Chapter 6: Olympiad Level",q:"Which option is a FACT?",o:["I think it is good.","It seems bad.","Water boils at 100°C.","It might rain."],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence contains a CONCLUSION?",o:["The sky is dark.","It is windy.","Therefore, it will rain.","Clouds are grey."],a:2},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows PROBLEM–SOLUTION?",o:["He was late because traffic.","There was traffic, so he left earlier.","Traffic was heavy.","He left home."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence uses FORMAL language?",o:["Wanna join us?","Could you please join us?","Hey, come here!","Let's hang out!"],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows OBJECTIVE opinion?",o:["I feel it is bad.","The data shows an increase.","I hate the result.","It is ugly."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence is the BEST summary?",o:["It tells everything.","It gives main ideas.","It adds opinions.","It repeats examples."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which word best replaces 'important'?",o:["Tiny","Essential","Rare","Weak"],a:1},
+
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows EVALUATION?",o:["The movie is two hours.","The movie was released yesterday.","The movie is well-directed.","The movie has actors."],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows ASSUMPTION?",o:["It is proven.","It might be true.","It was tested.","It is a fact."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows a GENERALIZATION?",o:["Some cats are playful.","All cats are playful.","This cat is playful.","My cat is playful."],a:1},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows REASONING?",o:["I like it.","It is good.","It is good because it is useful.","It is good, I think."],a:2},
+{chapter:"Chapter 6: Olympiad Level",q:"Which sentence shows a STRONG argument?",o:["I feel it is right.","Everyone says so.","The evidence clearly supports the idea.","It seems okay."],a:2}
+
+
+
+
+];
+
+let index=0;
+let score=0;
+let answered=[];
+
+function loadQuestion(){
+    document.getElementById("score").innerHTML="";
+    document.getElementById("chapter").innerHTML=quiz[index].chapter;
+    document.getElementById("question").innerHTML=(index+1)+". "+quiz[index].q;
+    const opt=document.getElementById("options");
+    opt.innerHTML="";
+    quiz[index].o.forEach((choice,i)=>{
+        const btn=document.createElement("button");
+        btn.innerText=choice;
+        if(answered[index]){
+            if(i===quiz[index].a) btn.classList.add("correct");
+            if(i===answered[index] && answered[index]!==quiz[index].a) btn.classList.add("wrong");
+            btn.disabled=true;
+        }
+        btn.onclick=()=>checkAnswer(i,btn);
+        opt.appendChild(btn);
+    });
+}
+
+function checkAnswer(i,btn){
+    if(answered[index]) return;
+    answered[index]=i;
+    if(i===quiz[index].a){
+        btn.classList.add("correct");
+        score+=2.5;
+    }else{
+        btn.classList.add("wrong");
+        document.querySelectorAll(".options button")[quiz[index].a].classList.add("correct");
+    }
+}
+
+function nextQuestion(){
+    if(index<quiz.length-1){
+        index++;
+        loadQuestion();
+    }else{
+        document.getElementById("score").innerHTML="🎯 SCORE AKHIR: "+score.toFixed(0);
+        document.getElementById("restart").style.display="block";
+
+        /* ===== TAMPILKAN KUNCI JAWABAN ===== */
+        const list=document.getElementById("answerList");
+        list.innerHTML="";
+        quiz.forEach((q,i)=>{
+            const li=document.createElement("li");
+            li.innerHTML=(i+1)+". "+q.q+" <b>("+q.o[q.a]+")</b>";
+            list.appendChild(li);
+        });
+        document.getElementById("answerKey").style.display="block";
+        /* ================================ */
+    }
+}
+
+function prevQuestion(){
+    if(index>0){
+        index--;
+        loadQuestion();
+    }
+}
+
+function restartQuiz(){
+    index=0;
+    score=0;
+    answered=[];
+    document.getElementById("restart").style.display="none";
+    document.getElementById("answerKey").style.display="none";
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+</body>
+</html>
